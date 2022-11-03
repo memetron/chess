@@ -3,6 +3,7 @@ import '../index.css';
 import Board from './board';
 import initialiseChessBoard from '../helpers/initializer';
 import Piece from "../pieces/piece";
+import coordInArray from "../helpers/coordInArray";
 
 interface Props {
 
@@ -40,6 +41,7 @@ export default class Game extends React.Component<Props, State> {
                 <div className="game">
                     <div className="game-board">
                         <Board
+                            moves={this.state.validMoves}
                             squares={this.state.squares}
                             onClick={(i, j) => this.handleClick(i, j)}
                         />
@@ -61,6 +63,7 @@ export default class Game extends React.Component<Props, State> {
                 validMoves: squares[i][j].listValidMoves(squares, i, j)
             });
             squares[i][j].style = {...squares[i][j].style, backgroundColor: "RGB(111,143,114)"};
+
         } else {
             if (this.state.isPieceSelected) { // piece is selected and tile is clicked
                 if (i === this.state.selectedI && j === this.state.selectedJ) {
@@ -70,12 +73,12 @@ export default class Game extends React.Component<Props, State> {
                         backgroundColor: ""
                     };
                     this.setState({
-                        isPieceSelected: false
+                        isPieceSelected: false,
+                        validMoves: []
                     })
-
                 } else {
                     // new tile is clicked
-                    if (moveInArray(this.state.validMoves, i, j)) {
+                    if (coordInArray(this.state.validMoves, i, j)) {
                         // valid move
                         squares[this.state.selectedI][this.state.selectedJ].firstMove = false;
                         squares[i][j] = squares[this.state.selectedI][this.state.selectedJ];
@@ -87,23 +90,10 @@ export default class Game extends React.Component<Props, State> {
                         this.setState({
                             squares: squares,
                             isPieceSelected: false,
-                            player: this.state.player === 1 ? 2 : 1
+                            player: this.state.player === 1 ? 2 : 1,
+                            validMoves: []
                         });
                     }
-                    // if (squares[this.state.selectedI][this.state.selectedJ].isValidMove(squares, [this.state.selectedI, this.state.selectedJ], [i, j])) {
-                    //     // valid move
-                    //     squares[i][j] = squares[this.state.selectedI][this.state.selectedJ];
-                    //     squares[this.state.selectedI][this.state.selectedJ].style = {
-                    //         ...squares[this.state.selectedI][this.state.selectedJ].style,
-                    //         backgroundColor: ""
-                    //     };
-                    //     delete squares[this.state.selectedI][this.state.selectedJ];
-                    //     this.setState({
-                    //         squares: squares,
-                    //         isPieceSelected: false,
-                    //         player: this.state.player === 1 ? 2 : 1
-                    //     });
-                    // }
                 }
             }
         }
@@ -111,11 +101,3 @@ export default class Game extends React.Component<Props, State> {
     }
 }
 
-function moveInArray(moves: number[][], i: number, j: number) {
-    for (let x = 0; x < moves.length; x++) {
-        if (moves[x][0] === i && moves[x][1] === j) {
-            return true;
-        }
-    }
-    return false;
-}

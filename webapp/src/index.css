@@ -31,6 +31,9 @@ ol, ul {
   padding: 0;
   text-align: center;
   width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .square:focus {
