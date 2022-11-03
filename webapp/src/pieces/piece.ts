@@ -1,8 +1,11 @@
-export default class Piece {
+export default abstract class Piece {
     player: number;
-    style: {};
+    style: { [key: string]: string };
+
     constructor(player: number, iconUrl: string) {
         this.player = player;
-        this.style = {backgroundImage: "url('"+iconUrl+"')"};
+        this.style = {backgroundImage: "url('" + iconUrl + "')"};
     }
+
+    abstract isValidMove(squares: Piece[][], src: number[], dest: number[]): boolean;
 }
