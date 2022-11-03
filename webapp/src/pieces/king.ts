@@ -7,7 +7,8 @@ export default class King extends Piece {
             "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg"));
     }
 
-    isValidMove(squares: Piece[][], src: number[], dest: number[]): boolean {
-        return false;
+
+    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+        return [];
     }
 }
