@@ -3,6 +3,7 @@ import '../index.css';
 import Board from './board';
 import initialiseChessBoard from '../helpers/initializer';
 import Piece from "../pieces/piece";
+import coordInArray from "../helpers/coordInArray";
 
 interface Props {
 
@@ -16,6 +17,7 @@ interface State {
     selectedJ: number;
     status: string;
     turn: string;
+    validMoves: number[][];
 }
 
 export default class Game extends React.Component<Props, State> {
@@ -28,7 +30,8 @@ export default class Game extends React.Component<Props, State> {
             selectedI: 0,
             selectedJ: 0,
             status: '',
-            turn: 'white'
+            turn: 'white',
+            validMoves: []
         }
     }
 
@@ -38,6 +41,7 @@ export default class Game extends React.Component<Props, State> {
                 <div className="game">
                     <div className="game-board">
                         <Board
+                            moves={this.state.validMoves}
                             squares={this.state.squares}
                             onClick={(i, j) => this.handleClick(i, j)}
                         />
@@ -49,46 +53,58 @@ export default class Game extends React.Component<Props, State> {
         );
     }
 
-    handleClick(i: number, j: number) {
+    handleClick(i: number, j: number): void {
         const squares: Piece[][] = this.state.squares.slice();
         if (!this.state.isPieceSelected && squares[i][j] && squares[i][j].player === this.state.player) {
-            this.setState({
-                selectedI: i,
-                selectedJ: j,
-                isPieceSelected: true
-            });
-            squares[i][j].style = {...squares[i][j].style, backgroundColor: "RGB(111,143,114)"};
+            this.selectPiece(squares, i, j);
         } else {
             if (this.state.isPieceSelected) { // piece is selected and tile is clicked
                 if (i === this.state.selectedI && j === this.state.selectedJ) {
                     // same piece as before
-                    squares[this.state.selectedI][this.state.selectedJ].style = {
-                        ...squares[this.state.selectedI][this.state.selectedJ].style,
-                        backgroundColor: ""
-                    };
-                    this.setState({
-                        isPieceSelected: false
-                    })
-
+                    this.deselectPiece(squares);
                 } else {
                     // new tile is clicked
-                    if (squares[this.state.selectedI][this.state.selectedJ].isValidMove(squares,[this.state.selectedI, this.state.selectedJ], [i, j])) {
+                    if (coordInArray(this.state.validMoves, i, j)) {
                         // valid move
-                        squares[i][j] = squares[this.state.selectedI][this.state.selectedJ];
-                        squares[this.state.selectedI][this.state.selectedJ].style = {
-                            ...squares[this.state.selectedI][this.state.selectedJ].style,
-                            backgroundColor: ""
-                        };
-                        delete squares[this.state.selectedI][this.state.selectedJ];
-                        this.setState({
-                            squares: squares,
-                            isPieceSelected: false,
-                            player: this.state.player === 1 ? 2 : 1
-                        });
+                        this.executeMove(squares, [this.state.selectedI, this.state.selectedJ],[i, j]);
                     }
                 }
             }
         }
+    }
 
+    selectPiece(squares: Piece[][], i:number, j:number): void {
+        this.setState({
+            selectedI: i,
+            selectedJ: j,
+            isPieceSelected: true,
+            validMoves: squares[i][j].listValidMoves(squares, i, j)
+        });
+        squares[i][j].addHighlight();
+    }
+
+    deselectPiece(squares: Piece[][]): void {
+        squares[this.state.selectedI][this.state.selectedJ].removeHighlight()
+        this.setState({
+            isPieceSelected: false,
+            validMoves: []
+        })
+    }
+
+    executeMove(squares: Piece[][], src: number[], dest: number[]): void {
+        // move square
+        squares[src[0]][src[1]].firstMove = false;
+        squares[dest[0]][dest[1]] = squares[src[0]][src[1]];
+        delete squares[src[0]][src[1]];
+
+        // update game state
+        squares[dest[0]][dest[1]].removeHighlight();
+        this.setState({
+            squares: squares,
+            isPieceSelected: false,
+            player: this.state.player === 1 ? 2 : 1,
+            validMoves: []
+        });
     }
 }
+

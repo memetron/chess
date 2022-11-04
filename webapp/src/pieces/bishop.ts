@@ -1,4 +1,5 @@
 import Piece from './piece';
+import addMovesInDirection from "./addMovesInDirection";
 
 export default class Bishop extends Piece {
     constructor(player: number) {
@@ -6,7 +7,18 @@ export default class Bishop extends Piece {
             "/assets/White/bishop.png" :
             "/assets/Black/bishop.png"));
     }
-    isValidMove(squares: Piece[][], src: number[], dest: number[]): boolean {
-        return false;
+
+    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+        let moves: number[][] = [];
+        let offsets = [
+            [1, 1],
+            [1, -1],
+            [-1, 1],
+            [-1, -1]
+        ]
+        offsets.forEach((element) => {
+            moves = addMovesInDirection(squares, moves, [i, j], element, this.player);
+        });
+        return moves
     }
 }

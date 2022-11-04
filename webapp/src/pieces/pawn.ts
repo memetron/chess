@@ -1,46 +1,31 @@
 import Piece from './piece';
+import isOccupied from "../helpers/squareOccupied";
 
 export default class Pawn extends Piece {
-    firstMove: boolean = true;
-
     constructor(player: number) {
         super(player, (player === 1 ?
             "/assets/White/pawn.png" :
             "/assets/Black/pawn.png"));
     }
 
-    isValidMove(squares: Piece[][], src: number[], dest: number[]): boolean {
-        let path: number[][] = this.getPath(src, dest);
-        if (path.length === 0) return false;
-        let valid: boolean = true;
-        path.forEach((element) => {
-            if (squares[element[0]][element[1]]) {
-                if (squares[element[0]][element[1]].player === this.player) valid = false;
-                else if (element[1] === src[1]) valid = false;
-            } else {
-                if (element[1] !== src[1]) valid = false;
+    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+        let moves: number[][] = new Array();
+        if (this.player === 2) {
+            if (isOccupied(squares, i + 1, j) === 0) {
+                moves.push([i + 1, j]);
+                if (this.firstMove && isOccupied(squares, i + 2, j) === 0) moves.push([i + 2, j]);
             }
-        })
-        if (!valid) return false;
-        this.firstMove = false;
-        return true;
+            if (isOccupied(squares, i + 1, j + 1) === 1) moves.push([i + 1, j + 1]);
+            if (isOccupied(squares, i + 1, j - 1) === 1) moves.push([i + 1, j - 1]);
+        } else if (this.player === 1) {
+            if (isOccupied(squares, i - 1, j) === 0) {
+                moves.push([i - 1, j]);
+                if (this.firstMove && isOccupied(squares, i - 2, j) === 0) moves.push([i - 2, j]);
+            }
+            if (isOccupied(squares, i - 1, j + 1) === 2) moves.push([i - 1, j + 1]);
+            if (isOccupied(squares, i - 1, j - 1) === 2) moves.push([i - 1, j - 1]);
+        }
+        return moves;
     }
 
-    private getPath(src: number[], dest: number[]) {
-        if (this.player === 2) {
-            if (dest[0] - src[0] === 1 && Math.abs(src[1] - dest[1]) <= 1) {
-                return [dest];
-            } else if (this.firstMove && dest[0] - src[0] === 2 && src[1] - dest[1] === 0) {
-                return [[src[0] + 1, src[1]], dest];
-            }
-            return [];
-        } else {
-            if (dest[0] - src[0] === -1 && Math.abs(src[1] - dest[1]) <= 1) {
-                return [dest];
-            } else if (this.firstMove && dest[0] - src[0] === -2 && src[1] - dest[1] === 0) {
-                return [[src[0] - 1, src[1]], dest];
-            }
-            return [];
-        }
-    }
 }

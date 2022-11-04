@@ -7,7 +7,8 @@ export default class King extends Piece {
             "/assets/Black/king.png"));
     }
 
-    isValidMove(squares: Piece[][], src: number[], dest: number[]): boolean {
-        return false;
+
+    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+        return [];
     }
 }
