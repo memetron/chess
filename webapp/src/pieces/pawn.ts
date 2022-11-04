@@ -4,8 +4,8 @@ import isOccupied from "../helpers/squareOccupied";
 export default class Pawn extends Piece {
     constructor(player: number) {
         super(player, (player === 1 ?
-            "https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg" :
-            "https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg"));
+            "/assets/White/pawn.png" :
+            "/assets/Black/pawn.png"));
     }
 
     listValidMoves(squares: Piece[][], i: number, j: number, ignoreKing: boolean): number[][] {
