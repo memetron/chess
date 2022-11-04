@@ -35,6 +35,12 @@ export default function initializer(){
 
     squares[7][3] = new Queen(1);
     squares[7][4] = new King(1);
-
+    for(let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (squares[i][j]) {
+                squares[i][j].generateCoveredSquares(squares, i, j);
+            }
+        }
+    }
     return squares;
 }

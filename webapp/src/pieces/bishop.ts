@@ -8,7 +8,7 @@ export default class Bishop extends Piece {
             "https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg"));
     }
 
-    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+    listValidMoves(squares: Piece[][], i: number, j: number, ignoreKing: boolean): number[][] {
         let moves: number[][] = [];
         let offsets = [
             [1, 1],
@@ -17,7 +17,7 @@ export default class Bishop extends Piece {
             [-1, -1]
         ]
         offsets.forEach((element) => {
-            moves = addMovesInDirection(squares, moves, [i, j], element, this.player);
+            moves = addMovesInDirection(squares, moves, [i, j], element, this.player, ignoreKing);
         });
         return moves
     }

@@ -8,7 +8,7 @@ export default class Rook extends Piece {
             "https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg"));
     }
 
-    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+    listValidMoves(squares: Piece[][], i: number, j: number, ignoreKing: boolean): number[][] {
         let moves: number[][] = [];
         let offsets = [
             [1, 0],
@@ -17,7 +17,7 @@ export default class Rook extends Piece {
             [0, -1]
         ]
         offsets.forEach((element) => {
-            moves = addMovesInDirection(squares, moves, [i, j], element, this.player);
+            moves = addMovesInDirection(squares, moves, [i, j], element, this.player, ignoreKing);
         });
         return moves
     }

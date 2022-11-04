@@ -8,7 +8,7 @@ export default class Queen extends Piece {
             "https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg"));
     }
 
-    listValidMoves(squares: Piece[][], i: number, j: number): number[][] {
+    listValidMoves(squares: Piece[][], i: number, j: number, ignoreKing: boolean): number[][] {
         let moves: number[][] = [];
         let offsets = [
             [1, 0],
@@ -21,7 +21,7 @@ export default class Queen extends Piece {
             [-1, -1]
         ]
         offsets.forEach((element) => {
-            moves = addMovesInDirection(squares, moves, [i, j], element, this.player);
+            moves = addMovesInDirection(squares, moves, [i, j], element, this.player, ignoreKing);
         });
         return moves
     }

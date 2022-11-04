@@ -78,7 +78,7 @@ export default class Game extends React.Component<Props, State> {
             selectedI: i,
             selectedJ: j,
             isPieceSelected: true,
-            validMoves: squares[i][j].listValidMoves(squares, i, j)
+            validMoves: squares[i][j].listValidMoves(squares, i, j, false)
         });
         squares[i][j].addHighlight();
     }
@@ -96,7 +96,7 @@ export default class Game extends React.Component<Props, State> {
         squares[src[0]][src[1]].firstMove = false;
         squares[dest[0]][dest[1]] = squares[src[0]][src[1]];
         delete squares[src[0]][src[1]];
-
+        squares[dest[0]][dest[1]].generateCoveredSquares(squares,dest[0],dest[1]);
         // update game state
         squares[dest[0]][dest[1]].removeHighlight();
         this.setState({
