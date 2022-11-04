@@ -1,12 +1,11 @@
 import Piece from './piece';
+import coordInArray from "../helpers/coordInArray";
 
 export default class King extends Piece {
     constructor(player: number) {
         super(player, (player === 1 ?
             "/assets/White/king.png" :
             "/assets/Black/king.png"));
-            "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg" :
-            "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg"));
         this.isKing = true;
     }
 
